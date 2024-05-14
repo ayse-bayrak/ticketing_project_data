@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RoleRepository extends JpaRepository <Role, Long> {
 
     //give me the role based on the description
-    Role findByDescription(String description);
+    Role findByDescription(String description); // derived query
 }

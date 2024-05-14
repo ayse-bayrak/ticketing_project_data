@@ -25,11 +25,12 @@ public class RoleServiceImpl implements RoleService {
         //Controller called me and requesting all RoleDTOs so it can show in the drop-down in the ui
         //I need to make a call to db and all the roles from table
         // go to repository find a service(method ) which gives me the roles from db
-        List<Role> roleList = roleRepository.findAll();
+
+        List<Role> roleList = roleRepository.findAll(); // findAll() is coming from JpaRepository
 
         //I have Role entities from DB
         //I need to convert those Role entities to DTOs
-        //I need to use Modelmapper
+        //I need to use Model mapper
         //I already created a class called RoleMapper and there are methods for me that will make this conversion
 
         return roleList.stream().map(roleMapper::convertToDto).collect(Collectors.toList());

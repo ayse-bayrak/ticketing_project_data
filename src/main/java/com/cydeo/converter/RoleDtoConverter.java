@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 //when I chose to Role in UI, it is coming as a String But I need tp pass as an object
 //we need convert them
 @Component
-@ConfigurationPropertiesBinding
+//@ConfigurationPropertiesBinding
 public class RoleDtoConverter implements Converter<String, RoleDTO> {
 
     RoleService roleService;
