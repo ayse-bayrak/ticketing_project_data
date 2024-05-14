@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserDTO> listAllUsers();
+    List<UserDTO> listAllUsers();//list all
 
     UserDTO findByUserName(String username); //to update--> we need this one to update
 
