@@ -13,6 +13,11 @@ public interface UserService {
     void save(UserDTO user); // save
 
     void deleteByUserName(String username); //delete
+
+    UserDTO update(UserDTO user);
+
+
+
 }
 
 //we are in the service layer, meaning is called this method from controller.
