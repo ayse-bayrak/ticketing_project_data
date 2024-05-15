@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -30,12 +30,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findByUserName(String username) {
-        return null;
+        return userMapper.convertToDTO(userRepository.findByUserName(username));
     }
 
     @Override
     public void save(UserDTO user) {
-
+    userRepository.save(userMapper.convertToEntity(user));
     }
 
     @Override
