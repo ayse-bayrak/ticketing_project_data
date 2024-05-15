@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,8 +16,11 @@ import java.util.List;
 @NoArgsConstructor // we need because of jpql stuff
 @Entity
 @Table(name="users")
+@Where(clause = "is_deleted=false") // in the interview toy can explain this one, most of the junior developer not aware of this one.
 public class User extends BaseEntity {
-
+//@Where(clause = "is_deleted=false")
+    //whatever repository which is using the User entity (in my case UserRepository)
+    //whatever queries inside (findByUsername, deleteByUserName...) include where(clause  = "?") all queries is gonna be combine, concatenate in my case where is_deleted=false
     private String firstName;
     private String lastName;
     private String userName;

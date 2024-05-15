@@ -12,8 +12,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+//@Transactional--> when you write a query this is drive or jpql or native query in the repository, if this query is doing either insert or delete or update (it is called ddl stuff)
+// if doing this kind of transaction in the database, we need to @Transactional, either method level either class level
+// if derived @Transactional
+//if jpql or native @Transactional and @Modifying
 @Service
-@Transactional // when we put it to the class level, use only method with derived Query @Modifying use @Query (JPQL and native query)
+@Transactional // when we put it to the class level, use only method with derived Query  use @Query (JPQL and native query), based on the needs either class level or method
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
@@ -48,6 +53,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void delete(String username) {
+    // go to db and get the user with username
+        User user = userRepository.findByUserName(username);
+        // change the isDeleted field to true
+        user.setIsDeleted(true);
+        userRepository.save(user);
+        // save the object in the db
+    }
+
+    @Override
     public UserDTO update(UserDTO user) {
        // User user1 = userRepository.findAll().stream().filter(u->u.getUserName().equals(user.getUserName())).findAny().get();
         //return userMapper.convertToDTO(userRepository.updateUserById(user1.getId()));
@@ -60,9 +75,7 @@ public class UserServiceImpl implements UserService{
         convertedUser.setId(user1.getId());
         //save the update user in the db
         userRepository.save(convertedUser);
-
         return findByUserName(user.getUserName());
-
     }
 
 

@@ -15,19 +15,16 @@ public class RoleDtoConverter implements Converter<String, RoleDTO> {
 
     RoleService roleService;
 
-    public RoleDtoConverter(@Lazy RoleService roleService) {
+    public RoleDtoConverter(@Lazy RoleService roleService) { // I use @Lazy because I got error about infinite circle create bean, and i say wait until I call RoleService
         this.roleService = roleService;
     }
 
     @Override
     public RoleDTO convert(String source) {
-
         if (source == null || source.equals("")) {  //  Select  -> ""
             return null;
         }
-
         return roleService.findById(Long.parseLong(source));
-
     }
 
 }

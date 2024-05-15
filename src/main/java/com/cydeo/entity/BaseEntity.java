@@ -23,6 +23,8 @@ public class BaseEntity {
     private LocalDateTime lastUpdateDateTime;
     private Long lastUpdateUserId;
 
+    private Boolean isDeleted = false;
+
 }
 /*
 I am creating two different object fro same object, DTO and entity.

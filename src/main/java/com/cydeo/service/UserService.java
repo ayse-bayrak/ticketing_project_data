@@ -15,6 +15,7 @@ public interface UserService {
     void deleteByUserName(String username); //delete
 
     UserDTO update(UserDTO user);
+    void delete(String username);
 
 
 
