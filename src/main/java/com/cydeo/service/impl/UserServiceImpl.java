@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService{
     public void deleteByUserName(String username) {
 //        User user = userRepository.findAll().stream().filter(u->u.getUserName().equals(username)).findFirst().get();
 //        userRepository.delete(user);  --> he says long way
-        userRepository.deleteByUserName(username);
-    }
+        userRepository.deleteByUserName(username); // instead of long way we create derived query in repository
+    }//  // now we don't use this method because we want to delete UI without deleting database
 
     @Override
     public void delete(String username) {
