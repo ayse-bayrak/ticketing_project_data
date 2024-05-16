@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Where(clause = "is_deleted=false") // in the interview toy can explain this one, most of the junior developer not aware of this one.
 
 public class Project extends BaseEntity{
+
     private String projectCode;
     private String projectName;
 
