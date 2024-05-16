@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name="projects")
 @Where(clause = "is_deleted=false") // in the interview toy can explain this one, most of the junior developer not aware of this one.
-
 public class Project extends BaseEntity{
 
     private String projectCode;
@@ -36,4 +35,5 @@ public class Project extends BaseEntity{
     @JoinColumn(name = "manager_id")
     private User assignManager; // every project has a manager, manager is User
 
+    private Boolean isDeleted=false;
 }
