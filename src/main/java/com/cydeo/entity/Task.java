@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Where(clause = "is_deleted=false") //for our delete operation, we don't want to do hardcoded deleted from the database, I want to soft delete, mean we just changing the field parameter, whatever repository is using task entity, all those queries belongs to theta repository autimatically concat this clause
 public class Task extends BaseEntity{
 
-// order field is different from the DTO, is it problem for mapper?
+    // order field is different from the DTO, is it problem for mapper?
     // no, it is checking for fieldName, it looks exact name
     // name needs to match for mapper, it finds the both name same and then getter setter
 
@@ -38,6 +38,6 @@ public class Task extends BaseEntity{
     private Project project; // one project can have many takes
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="employee_id")
+    @JoinColumn(name="assigned_employee_id")
     private User assignedEmployee;
 }

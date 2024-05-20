@@ -11,7 +11,10 @@ import javax.validation.constraints.*;
 
 public class UserDTO {
 
-        private Long id;
+        private Long id; // we need to add in Data portion,
+        // because when we try to map to entity, since the id is not exist in the UI,
+        // it gives error and we add this one therefore
+        // This is can map to entity
 
         public Long getId() {
             return id;
