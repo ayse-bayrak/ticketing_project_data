@@ -13,6 +13,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ProjectDTO {
 
+    private Long id; // we need to add in Data portion,
+    // because when we try to map to entity, since the id is not exist in the UI,
+    // it gives error and we add this one therefore
+    // This is can map to entity
+
     @NotBlank
     private String projectName;
 
