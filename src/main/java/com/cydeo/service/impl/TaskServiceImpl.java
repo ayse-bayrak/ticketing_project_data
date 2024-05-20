@@ -1,12 +1,16 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.entity.Task;
+import com.cydeo.enums.Status;
 import com.cydeo.mapper.TaskMapper;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.TaskService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service // we will always use the interface for the injection. So we need to tell one of the qualified bean for this interface which is right now TaskServiceImpl
 public class TaskServiceImpl implements TaskService {
@@ -21,16 +25,20 @@ private final TaskMapper taskMapper;
 
     @Override
     public List<TaskDTO> listAllTask() {
-        return null;
+        return taskRepository.findAll().stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public void save(TaskDTO task) {
+    public void save(TaskDTO dto) {
 
+        dto.setTaskStatus(Status.OPEN);
+        dto.setAssignedDate(LocalDate.now());
+        Task task1=taskMapper.convertToEntity(dto);
+        taskRepository.save(task1);
     }
 
     @Override
-    public void update(TaskDTO task) {
+    public void update(TaskDTO dto) {
 
     }
 
