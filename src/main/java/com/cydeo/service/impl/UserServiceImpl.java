@@ -85,9 +85,6 @@ public class UserServiceImpl implements UserService{
         userRepository.save(convertedUser);
         return findByUserName(user.getUserName());
     }
-
-
-
     //When we want to update I need to id, otherwise if we use save method, it is created new object in the DB, duplicate obj
-    //this is small challenges which is you can explain in you interview about what problem is challenge fro you and how did you fix it?
+    //this is small challenges which is you can explain in you interview about what problem is challenge for you and how did you fix it?
 }

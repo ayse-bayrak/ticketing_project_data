@@ -36,7 +36,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void save(ProjectDTO dto) {
-        dto.setProjectStatus(Status.OPEN);
+        dto.setProjectStatus(Status.OPEN); // since status is not exist in UI form
         Project project = projectMapper.convertToEntity(dto);
         projectRepository.save(project);
     }
@@ -49,8 +49,6 @@ public class ProjectServiceImpl implements ProjectService {
         convertedProject.setId(project.getId());
         convertedProject.setProjectStatus(project.getProjectStatus());
         projectRepository.save(convertedProject);
-
-
 
 
     }

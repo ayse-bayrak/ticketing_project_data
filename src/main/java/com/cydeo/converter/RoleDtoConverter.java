@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-//when I chose to Role in UI, it is coming as a String But I need tp pass as an object
+//when I chose to Role in UI, it is coming as a String But I need to pass as an object
 //we need convert them
 @Component
 //@ConfigurationPropertiesBinding

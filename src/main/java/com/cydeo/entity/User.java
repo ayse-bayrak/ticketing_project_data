@@ -21,7 +21,7 @@ public class User extends BaseEntity {
 //@Where(clause = "is_deleted=false")
     //whatever repository which is using the User entity (in my case UserRepository)
     //whatever queries inside (findByUsername, deleteByUserName...) include where(clause  = "?") all queries is gonna be combine,
-// concatenate in my case where is_deleted=false
+    //concatenate in my case where is_deleted=false
     //we want to delete UI without deleting database and for this we use this annotation
     private String firstName;
     private String lastName;

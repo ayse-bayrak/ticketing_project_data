@@ -15,3 +15,7 @@ public interface ProjectService {
     void deleteByUserName(String code); //delete
     void complete(String code);
 }
+//UI something needs to be unique over there.
+//database is doing with the primary key is separate
+//what is better case? we should have projectId or projectCode something like this in the UI
+//it is better to separate.

@@ -74,7 +74,7 @@ public class UserController {
 
     @GetMapping("/delete/{username}")
     public String deleteUser(@PathVariable("username") String username) {
-      //  userService.deleteByUserName(username);
+      //  userService.deleteByUserName(username);//now we don't use this method because we want to delete UI without deleting database
         userService.delete(username);
         return "redirect:/user/create";
     }

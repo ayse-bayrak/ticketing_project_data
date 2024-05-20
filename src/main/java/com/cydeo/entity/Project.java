@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Where(clause = "is_deleted=false") // in the interview toy can explain this one, most of the junior developer not aware of this one.
 public class Project extends BaseEntity{
 
+    @Column(unique = true) // database is not gonna let we create with same projectCode if it is existing in another project
     private String projectCode;
     private String projectName;
 
