@@ -6,10 +6,12 @@ import com.cydeo.enums.Status;
 import com.cydeo.mapper.TaskMapper;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.TaskService;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service // we will always use the interface for the injection. So we need to tell one of the qualified bean for this interface which is right now TaskServiceImpl
@@ -33,22 +35,42 @@ private final TaskMapper taskMapper;
 
         dto.setTaskStatus(Status.OPEN);
         dto.setAssignedDate(LocalDate.now());
+
         Task task1=taskMapper.convertToEntity(dto);
         taskRepository.save(task1);
     }
 
     @Override
     public void update(TaskDTO dto) {
+      Optional<Task> task = taskRepository.findById(dto.getId());
+      Task convertedTask = taskMapper.convertToEntity(dto);
+
+      if (task.isPresent()){
+          convertedTask.setTaskStatus(task.get().getTaskStatus());
+          convertedTask.setAssignedDate(task.get().getAssignedDate());
+          taskRepository.save(convertedTask);
+      }
 
     }
 
     @Override
     public void delete(Long id) {
+        Optional<Task> foundTask = taskRepository.findById(id);
+
+        if (foundTask.isPresent()){
+            foundTask.get().setIsDeleted(true);
+            taskRepository.save(foundTask.get());
+        }
 
     }
 
     @Override
     public TaskDTO findById(Long id) {
+        Optional<Task> task = taskRepository.findById(id);
+
+        if (task.isPresent()) {
+            return taskMapper.convertToDTO(task.get());
+        }
         return null;
     }
 }
