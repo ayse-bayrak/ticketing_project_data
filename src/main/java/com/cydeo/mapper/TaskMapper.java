@@ -22,5 +22,4 @@ public class TaskMapper {
         return modelMapper.map(entity, TaskDTO.class);
     }
 
-
 }

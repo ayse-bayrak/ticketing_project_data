@@ -16,7 +16,7 @@ public class ProjectDTO {
     private Long id; // we need to add in Data portion,
     // because when we try to map to entity, since the id is not exist in the UI,
     // it gives error and we add this one therefore
-    // This is can map to entity
+    // This can map to entity
 
     @NotBlank
     private String projectName;
@@ -40,7 +40,7 @@ public class ProjectDTO {
 
     private Status projectStatus;
 
-    private int completeTaskCounts;
+    private int completeTaskCounts; // These fields are no need in database portion. So we add only UI portion object which is DTO
     private int unfinishedTaskCounts;
 
     public ProjectDTO(String projectName, String projectCode, UserDTO assignedManager, LocalDate startDate, LocalDate endDate, String projectDetail, Status projectStatus) {

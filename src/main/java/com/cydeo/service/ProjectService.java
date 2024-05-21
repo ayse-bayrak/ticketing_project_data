@@ -15,6 +15,7 @@ public interface ProjectService {
 
     void deleteByUserName(String code); //delete
     void complete(String code);
+    List<ProjectDTO> listAllProjectDetails();
 
 }
 //UI something needs to be unique over there.

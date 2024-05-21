@@ -13,5 +13,6 @@ public interface TaskService {
     void update(TaskDTO dto);
     void delete(Long id); // we don't have something unique in UI so we use id from the database portion
     TaskDTO findById(Long id); // for update, delete we need to find certain task
-
+    int totalNonCompletedTask(String projectCode);
+    int totalCompletedTask(String projectCode);
 }

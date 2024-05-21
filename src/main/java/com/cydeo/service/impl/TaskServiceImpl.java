@@ -43,12 +43,38 @@ private final TaskMapper taskMapper;
     @Override
     public void update(TaskDTO dto) {
       Optional<Task> task = taskRepository.findById(dto.getId());
+      /*
+      TaskRepository kullanılarak, veritabanında Task varlığı aranır.
+      Arama işlemi, TaskDTO'dan gelen id ile yapılır.
+      findById metodu bir Optional nesnesi döndürür,
+      çünkü belirtilen id'ye sahip bir görev bulunamayabilir.
+       */
       Task convertedTask = taskMapper.convertToEntity(dto);
+      /*
+      TaskDTO nesnesi, Task varlığına dönüştürülür.
+      Bu dönüşüm işlemi genellikle bir Mapper sınıfı aracılığıyla gerçekleştirilir.
+      Mapper sınıfı, DTO ve varlık arasında dönüşüm işlemlerini yönetir.
+       */
 
       if (task.isPresent()){
+          /*
+          Optional içindeki Task varlığı mevcut mu diye kontrol edilir.
+          Eğer varsa, güncelleme işlemi gerçekleştirilir.
+           */
           convertedTask.setTaskStatus(task.get().getTaskStatus());
+          /*
+          Task varlığının mevcut durumu (taskStatus) mevcut Task varlığından alınır
+          ve güncellenen Task varlığına atanır. Bu, TaskDTO'dan gelen verinin eksik olabileceği
+          durumlar için mevcut verinin korunmasını sağlar.
+
+
+           */
           convertedTask.setAssignedDate(task.get().getAssignedDate());
           taskRepository.save(convertedTask);
+          /*
+          Son olarak, güncellenen Task varlığı taskRepository üzerinden veritabanına kaydedilir.
+          Bu, güncellenen verinin kalıcı olarak saklanmasını sağlar.
+           */
       }
 
     }
@@ -72,5 +98,15 @@ private final TaskMapper taskMapper;
             return taskMapper.convertToDTO(task.get());
         }
         return null;
+    }
+
+    @Override
+    public int totalNonCompletedTask(String projectCode) {
+        return taskRepository.totalNonCompletedTasks(projectCode);
+    }
+
+    @Override
+    public int totalCompletedTask(String projectCode) {
+        return taskRepository.totalCompletedTasks(projectCode);
     }
 }

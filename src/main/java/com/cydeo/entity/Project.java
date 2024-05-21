@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Where(clause = "is_deleted=false") // in the interview toy can explain this one, most of the junior developer not aware of this one.
 public class Project extends BaseEntity{
 
-    @Column(unique = true) // database is not gonna let we create with same projectCode if it is existing in another project
+    @Column(unique = true) // database is not gonna let we create with same projectCode if it is existing another project
     private String projectCode;
     private String projectName;
 
@@ -36,7 +36,7 @@ public class Project extends BaseEntity{
     @JoinColumn(name = "manager_id")
     private User assignedManager; // every project has a manager, manager is User
 
-    private Boolean isDeleted=false;
+
 }
 /*
 error happens because of the manager field in your Project entity class, the name now is assignManager but in ProjectDTO it is assignedManager.
