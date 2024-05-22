@@ -2,6 +2,8 @@ package com.cydeo.repository;
 
 import com.cydeo.entity.Project;
 import com.cydeo.entity.Task;
+import com.cydeo.entity.User;
+import com.cydeo.enums.Status;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,5 +26,8 @@ public interface TaskRepository extends JpaRepository <Task, Long> {
     //i can pass another entity or some old entities.
     //But I can not pass entities directly if i am using native or jpql queries,
     // i need to pass project id or string
+
+    List<Task> findAllByTaskStatusIsNotAndAssignedEmployee(Status status, User user);
+    List<Task> findAllByTaskStatusAndAssignedEmployee(Status status, User user);
 
 }

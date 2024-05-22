@@ -2,13 +2,17 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Project;
 import com.cydeo.entity.Task;
+import com.cydeo.entity.User;
 import com.cydeo.enums.Status;
 import com.cydeo.mapper.ProjectMapper;
 import com.cydeo.mapper.TaskMapper;
+import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.TaskService;
+import com.cydeo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,11 +26,15 @@ public class TaskServiceImpl implements TaskService {
 private final TaskRepository taskRepository;
 private final TaskMapper taskMapper;
 private final ProjectMapper projectMapper;//part-5
+private final UserService userService;
+private final UserMapper userMapper;
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, ProjectMapper projectMapper) {
+    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, ProjectMapper projectMapper, UserService userService, UserMapper userMapper) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.projectMapper = projectMapper;
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -36,7 +44,6 @@ private final ProjectMapper projectMapper;//part-5
 
     @Override
     public void save(TaskDTO dto) {
-
         dto.setTaskStatus(Status.OPEN);
         dto.setAssignedDate(LocalDate.now());
 
@@ -47,41 +54,32 @@ private final ProjectMapper projectMapper;//part-5
     @Override
     public void update(TaskDTO dto) {
       Optional<Task> task = taskRepository.findById(dto.getId());
-      /*
-      TaskRepository kullanılarak, veritabanında Task varlığı aranır.
-      Arama işlemi, TaskDTO'dan gelen id ile yapılır.
-      findById metodu bir Optional nesnesi döndürür,
-      çünkü belirtilen id'ye sahip bir görev bulunamayabilir.
-       */
       Task convertedTask = taskMapper.convertToEntity(dto);
-      /*
+      if (task.isPresent()){
+          convertedTask.setTaskStatus(dto.getTaskStatus()==null ? task.get().getTaskStatus() : dto.getTaskStatus()); // in part-5 it is changed and fixed
+          convertedTask.setAssignedDate(task.get().getAssignedDate());
+          taskRepository.save(convertedTask);
+      }
+    }
+        /*
+      TaskRepository kullanılarak, veritabanında Task varlığı aranır.
+      Arama işlemi, TaskDTO'dan gelen id ile yapılır. findById metodu bir Optional nesnesi döndürür,
+      çünkü belirtilen id'ye sahip bir görev bulunamayabilir.
+
       TaskDTO nesnesi, Task varlığına dönüştürülür.
       Bu dönüşüm işlemi genellikle bir Mapper sınıfı aracılığıyla gerçekleştirilir.
       Mapper sınıfı, DTO ve varlık arasında dönüşüm işlemlerini yönetir.
+
+      Optional içindeki Task varlığı mevcut mu diye kontrol edilir.
+      Eğer varsa, güncelleme işlemi gerçekleştirilir.
+
+      Task varlığının mevcut durumu (taskStatus) mevcut Task varlığından alınır
+      ve güncellenen Task varlığına atanır. Bu, TaskDTO'dan gelen verinin eksik olabileceği
+      durumlar için mevcut verinin korunmasını sağlar.
+
+      Son olarak, güncellenen Task varlığı taskRepository üzerinden veritabanına kaydedilir.
+      Bu, güncellenen verinin kalıcı olarak saklanmasını sağlar.
        */
-
-      if (task.isPresent()){
-          /*
-          Optional içindeki Task varlığı mevcut mu diye kontrol edilir.
-          Eğer varsa, güncelleme işlemi gerçekleştirilir.
-           */
-          convertedTask.setTaskStatus(task.get().getTaskStatus());
-          /*
-          Task varlığının mevcut durumu (taskStatus) mevcut Task varlığından alınır
-          ve güncellenen Task varlığına atanır. Bu, TaskDTO'dan gelen verinin eksik olabileceği
-          durumlar için mevcut verinin korunmasını sağlar.
-
-
-           */
-          convertedTask.setAssignedDate(task.get().getAssignedDate());
-          taskRepository.save(convertedTask);
-          /*
-          Son olarak, güncellenen Task varlığı taskRepository üzerinden veritabanına kaydedilir.
-          Bu, güncellenen verinin kalıcı olarak saklanmasını sağlar.
-           */
-      }
-
-    }
 
     @Override
     public void delete(Long id) {
@@ -120,4 +118,37 @@ private final ProjectMapper projectMapper;//part-5
         List<Task> tasks = taskRepository.findAllByProject(project); //part-5
         tasks.forEach(task -> delete(task.getId()));
     }
+
+    @Override
+    public void completeByProject(ProjectDTO projectDTO) {
+        Project project = projectMapper.convertToEntity(projectDTO); //part-5
+        List<Task> tasks = taskRepository.findAllByProject(project); //part-5
+        tasks.stream().map(taskMapper::convertToDTO).forEach(taskDTO -> {
+            taskDTO.setTaskStatus(Status.COMPLETE);
+            update(taskDTO);
+        });
+    }
+
+    @Override
+    public List<TaskDTO> listAllTasksByStatusIsNot(Status status) {
+        UserDTO loggedInUser = userService.findByUserName("john@employee.com");
+        List<Task> tasks = taskRepository.findAllByTaskStatusIsNotAndAssignedEmployee(status, userMapper.convertToEntity(loggedInUser));
+        return tasks.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> listAllTasksByStatus(Status status) {
+        UserDTO loggedInUser = userService.findByUserName("john@employee.com");
+        List<Task> tasks = taskRepository.findAllByTaskStatusAndAssignedEmployee(status, userMapper.convertToEntity(loggedInUser));
+        return tasks.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> listAllNonCompletedByAssignedManager(UserDTO assignedEmployee) {
+        List<Task> tasks = taskRepository
+                .findAllByTaskStatusIsNotAndAssignedEmployee(Status.COMPLETE, userMapper.convertToEntity(assignedEmployee));
+        return tasks.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
+    }
+
+
 }
