@@ -39,7 +39,7 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String insertTask( @ModelAttribute("task") TaskDTO task, BindingResult bindingResult, Model model) {
+    public String insertTask( @Valid @ModelAttribute("task") TaskDTO task, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
 

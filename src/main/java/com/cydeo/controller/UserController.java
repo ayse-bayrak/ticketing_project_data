@@ -34,7 +34,7 @@ public class UserController {
     }
 // video part 1 stops here.
     @PostMapping("/create")
-    public String insertUser(@ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
+    public String insertUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
 //I removed @Valid until complete the Data portion, because i use FD
         if (bindingResult.hasErrors()) {
 
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUser( @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
+    public String updateUser( @Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", roleService.listAllRoles());

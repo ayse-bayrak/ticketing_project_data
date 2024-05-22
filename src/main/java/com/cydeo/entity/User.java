@@ -26,6 +26,7 @@ public class User extends BaseEntity {
     //we want to delete UI without deleting database and for this we use this annotation
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String userName;
     private String passWord;
     private boolean enabled;
