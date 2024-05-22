@@ -68,7 +68,14 @@ public class ProjectServiceImpl implements ProjectService {
     public void delete(String code) {
         Project project = projectRepository.findByProjectCode(code);
         project.setIsDeleted(true);
+
+        project.setProjectCode(project.getProjectCode() + "-" + project.getId()); //part-5 // SP00-1
+        //at the end (part-5) we add this line, because i want to use same code SP00 to create another project after I deleted the project, soft deleting
         projectRepository.save(project);
+
+        taskService.deleteByProject(projectMapper.convertToDTO(project)); //part-5
+        //at the end (part-5) we add this line, because I want to delete all task related with soft deleting project
+        //I will create deleteByProject() in TaskService
     }
 
     @Override
