@@ -1,10 +1,15 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.ProjectDTO;
+import com.cydeo.dto.TaskDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.User;
 import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.ProjectService;
+import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,22 +28,26 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ProjectService projectService;
+    private final TaskService taskService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, @Lazy ProjectService projectService, @Lazy TaskService taskService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     @Override
     public List<UserDTO> listAllUsers() {
-        List<User> userList =userRepository.findAll(Sort.by("firstName"));
+        List<User> userList =userRepository.findAllByIsDeletedOrderByFirstNameDesc(false);
         return userList.stream().map(userMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public UserDTO findByUserName(String username) {
 
-        return userMapper.convertToDTO(userRepository.findByUserName(username));
+        return userMapper.convertToDTO(userRepository.findByUserNameAndIsDeleted(username, false));
     }
 
     @Override
@@ -51,21 +60,25 @@ public class UserServiceImpl implements UserService{
 //        User user = userRepository.findAll().stream().filter(u->u.getUserName().equals(username)).findFirst().get();
 //        userRepository.delete(user);  --> he says long way
         userRepository.deleteByUserName(username); // instead of long way we create derived query in repository
-    }//  // now we don't use this method because we want to delete UI without deleting database
+    }//  har deletion: now we don't use this method because we want to delete UI without deleting database
 
     @Override
     public void delete(String username) {
     // go to db and get the user with username
-        User user = userRepository.findByUserName(username);
-        // change the isDeleted field to true
-        user.setIsDeleted(true);
-        userRepository.save(user);
-        // save the object in the db
+        User user = userRepository.findByUserNameAndIsDeleted(username, false);
+        if (checkIfCanBeDeleted(user)) {
+            // change the isDeleted field to true
+            user.setIsDeleted(true);
+            user.setUserName(user.getUserName() + "-" +user.getId()); // harold@manager.com-2, if I want, I can use this part to create
+            userRepository.save(user);
+            // save the object in the db
+        }
+
     }
 
     @Override
     public List<UserDTO> listAllByRole(String role) {
-        List<User> users = userRepository.findByRoleDescriptionIgnoreCase(role);
+        List<User> users = userRepository.findByRoleDescriptionIgnoreCaseAndIsDeleted(role, false);
         return users.stream().map(userMapper::convertToDTO).collect(Collectors.toList());
 
     }
@@ -76,7 +89,7 @@ public class UserServiceImpl implements UserService{
         //return userMapper.convertToDTO(userRepository.updateUserById(user1.getId()));
 
         //Find current user
-        User user1 = userRepository.findByUserName(user.getUserName()); // has id yes
+        User user1 = userRepository.findByUserNameAndIsDeleted(user.getUserName(), false); // has id yes
         //Mapper Model update user dto to entity object
         User convertedUser = userMapper.convertToEntity(user); // has id? no
         //set id to the converted object
@@ -87,4 +100,20 @@ public class UserServiceImpl implements UserService{
     }
     //When we want to update I need to id, otherwise if we use save method, it is created new object in the DB, duplicate obj
     //this is small challenges which is you can explain in you interview about what problem is challenge for you and how did you fix it?
+private boolean checkIfCanBeDeleted(User user) {
+switch (user.getRole().getDescription()) {
+    case "Manager":
+        List<ProjectDTO> projectDTOList = projectService.listAllNonCompletedByAssignedManager(userMapper.convertToDTO(user));
+        return projectDTOList.size() == 0;
+    case "Employee":
+        List<TaskDTO> taskDTOList = taskService.listAllNonCompletedByAssignedManager(userMapper.convertToDTO(user));
+        return taskDTOList.size() == 0;
+    default:
+        return true;
+}
+}
+//we did private this method, because we don't need to this method from the other class
+    //and we use User user because this is a private method, this is not connected to our controller
+    //so it does not have to get some dto from the controller and it doesn't have to send something to our back
+
 }

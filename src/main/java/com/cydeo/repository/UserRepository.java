@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    List<User> findAllByIsDeletedOrderByFirstNameDesc(Boolean deleted);
     //get user based on username
-    User findByUserName(String username);
+    User findByUserNameAndIsDeleted(String username, Boolean deleted); //part-5 fixed
 
     @Transactional
     void deleteByUserName(String username); // derived query
@@ -18,5 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //Commit meaning all the steps  are successful executed
     //rollback meaning if anything error happened in any step, everything is going back, rolling back to the original place
 
-    List<User> findByRoleDescriptionIgnoreCase(String description); // derived query
+    List<User> findByRoleDescriptionIgnoreCaseAndIsDeleted(String description, Boolean deleted); // derived query
 }

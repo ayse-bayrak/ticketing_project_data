@@ -18,6 +18,7 @@ public interface UserService {
     void delete(String username);
     List<UserDTO> listAllByRole(String role);
 
+
 }
 
 //we are in the service layer, meaning is called this method from controller.

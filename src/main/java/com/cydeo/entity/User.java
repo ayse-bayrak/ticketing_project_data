@@ -16,7 +16,8 @@ import java.util.List;
 @NoArgsConstructor // we need because of jpql stuff
 @Entity
 @Table(name="users")
-@Where(clause = "is_deleted=false") // in the interview toy can explain this one, most of the junior developer not aware of this one.
+//@Where(clause = "is_deleted=false")  // select * from users Where id = 4 and is_deleted = false;
+// in the interview toy can explain this one, most of the junior developer not aware of this one.
 public class User extends BaseEntity {
 //@Where(clause = "is_deleted=false")
     //whatever repository which is using the User entity (in my case UserRepository)
