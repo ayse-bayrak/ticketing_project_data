@@ -56,11 +56,11 @@ private final UserMapper userMapper;
       Optional<Task> task = taskRepository.findById(dto.getId());
       Task convertedTask = taskMapper.convertToEntity(dto);
       if (task.isPresent()){
-          convertedTask.setTaskStatus(dto.getTaskStatus()==null ? task.get().getTaskStatus() : dto.getTaskStatus()); // in part-5 it is changed and fixed
+          convertedTask.setTaskStatus(dto.getTaskStatus()!=null ? dto.getTaskStatus(): task.get().getTaskStatus() ); // in part-5 it is changed and fixed
           convertedTask.setAssignedDate(task.get().getAssignedDate());
           taskRepository.save(convertedTask);
       }
-    }
+    } // line 59 we use if getTaskStatus
         /*
       TaskRepository kullanılarak, veritabanında Task varlığı aranır.
       Arama işlemi, TaskDTO'dan gelen id ile yapılır. findById metodu bir Optional nesnesi döndürür,
@@ -114,7 +114,7 @@ private final UserMapper userMapper;
 
     @Override
     public void deleteByProject(ProjectDTO projectDTO) {
-        Project project = projectMapper.convertToEntity(projectDTO); //part-5
+        Project  project= projectMapper.convertToEntity(projectDTO); //part-5
         List<Task> tasks = taskRepository.findAllByProject(project); //part-5
         tasks.forEach(task -> delete(task.getId()));
     }
