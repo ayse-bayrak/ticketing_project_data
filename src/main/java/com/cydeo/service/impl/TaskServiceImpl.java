@@ -60,7 +60,9 @@ private final UserMapper userMapper;
           convertedTask.setAssignedDate(task.get().getAssignedDate());
           taskRepository.save(convertedTask);
       }
-    } // line 59 we use if getTaskStatus
+    } // line 59 we use if dto.getTaskStatus is exist we use same taskStatus, if not we assign task's taskStatus
+    //when we click on the update button in UI we don't have dto.getStatus but
+    //when we call the update() from other place (in here it is calling inside the complete()) so we have dto.getTaskStatus value
         /*
       TaskRepository kullanılarak, veritabanında Task varlığı aranır.
       Arama işlemi, TaskDTO'dan gelen id ile yapılır. findById metodu bir Optional nesnesi döndürür,
