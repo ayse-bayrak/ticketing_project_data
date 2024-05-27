@@ -63,25 +63,6 @@ private final UserMapper userMapper;
     } // line 59 we use if dto.getTaskStatus is exist we use same taskStatus, if not we assign task's taskStatus
     //when we click on the update button in UI we don't have dto.getStatus but
     //when we call the update() from other place (in here it is calling inside the complete()) so we have dto.getTaskStatus value
-        /*
-      TaskRepository kullanılarak, veritabanında Task varlığı aranır.
-      Arama işlemi, TaskDTO'dan gelen id ile yapılır. findById metodu bir Optional nesnesi döndürür,
-      çünkü belirtilen id'ye sahip bir görev bulunamayabilir.
-
-      TaskDTO nesnesi, Task varlığına dönüştürülür.
-      Bu dönüşüm işlemi genellikle bir Mapper sınıfı aracılığıyla gerçekleştirilir.
-      Mapper sınıfı, DTO ve varlık arasında dönüşüm işlemlerini yönetir.
-
-      Optional içindeki Task varlığı mevcut mu diye kontrol edilir.
-      Eğer varsa, güncelleme işlemi gerçekleştirilir.
-
-      Task varlığının mevcut durumu (taskStatus) mevcut Task varlığından alınır
-      ve güncellenen Task varlığına atanır. Bu, TaskDTO'dan gelen verinin eksik olabileceği
-      durumlar için mevcut verinin korunmasını sağlar.
-
-      Son olarak, güncellenen Task varlığı taskRepository üzerinden veritabanına kaydedilir.
-      Bu, güncellenen verinin kalıcı olarak saklanmasını sağlar.
-       */
 
     @Override
     public void delete(Long id) {
