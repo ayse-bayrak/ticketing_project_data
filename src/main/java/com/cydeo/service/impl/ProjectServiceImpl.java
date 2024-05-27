@@ -3,13 +3,12 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.Project;
-import com.cydeo.entity.Task;
 import com.cydeo.entity.User;
 import com.cydeo.enums.Status;
+import com.cydeo.mapper.MapperUtil;
 import com.cydeo.mapper.ProjectMapper;
 import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.ProjectRepository;
-import com.cydeo.repository.TaskRepository;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
@@ -27,21 +26,22 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final TaskService taskService;
+    private final MapperUtil mapperUtil;
 
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper, UserService userService, UserMapper userMapper, TaskService taskService) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper, UserService userService, UserMapper userMapper, TaskService taskService, MapperUtil mapperUtil) {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
         this.userService = userService;
         this.userMapper = userMapper;
         this.taskService = taskService;
-
+        this.mapperUtil = mapperUtil;
     }
 
     @Override
     public ProjectDTO getByProjectCode(String code) {
         Project project = projectRepository.findByProjectCode(code);
-        return projectMapper.convertToDTO(project);
+        return mapperUtil.convert(project, new ProjectDTO());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void save(ProjectDTO dto) {
         dto.setProjectStatus(Status.OPEN); // since status is not exist in UI form
-        Project project = projectMapper.convertToEntity(dto);
+        Project project = mapperUtil.convert(dto, new Project());
         projectRepository.save(project);
     }
 
@@ -60,7 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void update(ProjectDTO dto) {
 
         Project project = projectRepository.findByProjectCode(dto.getProjectCode());
-        Project convertedProject = projectMapper.convertToEntity(dto);
+        Project convertedProject = mapperUtil.convert(dto, new Project());
         convertedProject.setId(project.getId());
         convertedProject.setProjectStatus(project.getProjectStatus());
         projectRepository.save(convertedProject);
@@ -77,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
         //at the end (part-5) we add this line, because i want to use same code SP00 to create another project after I deleted the project, soft deleting
         projectRepository.save(project);
 
-        taskService.deleteByProject(projectMapper.convertToDTO(project)); //part-5
+        taskService.deleteByProject(mapperUtil.convert(project, new ProjectDTO())); //part-5
         //at the end (part-5) we add this line, because I want to delete all task related with soft deleting project
         //I will create deleteByProject() in TaskService
     }
@@ -93,7 +93,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setProjectStatus(Status.COMPLETE);
         projectRepository.save(project);
 
-        taskService.completeByProject(projectMapper.convertToDTO(project)); //part-5
+        taskService.completeByProject(mapperUtil.convert(project, new ProjectDTO())); //part-5
     }
 
     @Override
