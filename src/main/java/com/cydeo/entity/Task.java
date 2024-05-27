@@ -16,7 +16,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor // FOR my query portion
 @AllArgsConstructor
-@Where(clause = "is_deleted=false") //for our delete operation, we don't want to do hardcoded deleted from the database, I want to soft delete, mean we just changing the field parameter, whatever repository is using task entity, all those queries belongs to theta repository autimatically concat this clause
+@Where(clause = "is_deleted=false") //for our delete operation, we don't want to do hardcoded deleted from the database,
+// I want to soft delete, mean we are just changing the field parameter,
+//whatever repository is using task entity, all those queries belongs to this repository automatically concat this clause
 public class Task extends BaseEntity{
 
     // order field is different from the DTO, is it problem for mapper?

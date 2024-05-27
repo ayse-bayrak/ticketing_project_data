@@ -124,7 +124,8 @@ private final UserMapper userMapper;
     @Override
     public void completeByProject(ProjectDTO projectDTO) {
         Project project = projectMapper.convertToEntity(projectDTO); //part-5
-        List<Task> tasks = taskRepository.findAllByProject(project); //part-5
+        List<Task> tasks = taskRepository.findAllByProject(project);
+        //part-5, firstly, it couldn't find user id 4-John, when I put where clause as command, and I fixed giving error my tasks should be able to get Employee information from the database
         tasks.stream().map(taskMapper::convertToDTO).forEach(taskDTO -> {
             taskDTO.setTaskStatus(Status.COMPLETE);
             update(taskDTO);

@@ -21,8 +21,9 @@ public interface TaskRepository extends JpaRepository <Task, Long> {
             "WHERE p.project_code=?1 AND t.task_status='COMPLETE'",nativeQuery = true)
     int totalCompletedTasks(String projectCode);
 
-    List<Task> findAllByProject(Project project); // I am using derived query // part-5
-    // if i useing derive queries i can work with entities directly inside my paramaters,
+    List<Task> findAllByProject(Project project);
+    // I am using derived query // part-5
+    // if i am using derive queries i can work with entities directly inside my parameters,
     //i can pass another entity or some old entities.
     //But I can not pass entities directly if i am using native or jpql queries,
     // i need to pass project id or string
