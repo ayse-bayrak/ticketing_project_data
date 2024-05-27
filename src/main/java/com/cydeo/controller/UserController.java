@@ -35,7 +35,14 @@ public class UserController {
 // video part 1 stops here.
     @PostMapping("/create")
     public String insertUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
-//I removed @Valid until complete the Data portion, because i use FD
+       //BindingResult is the one we use for checking if validations are passed or not on the models (DTOs in our case) coming from UI.
+       //BindingResult parameter has to come right after the model object parameter (Which is the DTO, not the "Model model")
+       /*
+       Because of the design of the BindingResult you need to pass it as a parameter right after the object you want to validate.
+       If you were injecting it, then you would need to specify which object you want to validate in each of the controller methods.
+       But there is nothing that gives you that kind of manual control over the BindingResult, so that's why we can't inject and use it.
+        */
+
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("roles", roleService.listAllRoles());
@@ -46,7 +53,7 @@ public class UserController {
         }
         userService.save(user);
 
-        return "redirect:/user/create";
+        return "redirect:/user/create"; // return specific endpoint
     }
 
     @GetMapping("/update/{username}")
@@ -74,7 +81,7 @@ public class UserController {
 
     @GetMapping("/delete/{username}")
     public String deleteUser(@PathVariable("username") String username) {
-      //  userService.deleteByUserName(username);//now we don't use this method because we want to delete UI without deleting database
+      //  userService.deleteByUserName(username);//now we don't use this method because we want to soft delete, only delete from UI without deleting database
         userService.delete(username);
         return "redirect:/user/create";
     }
