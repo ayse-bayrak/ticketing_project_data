@@ -101,10 +101,10 @@ public class ProjectServiceImpl implements ProjectService {
         // hey db give me all projects assign to manager login in the system
         UserDTO currentUserDTO = userService.findByUserName("harold@manager.com");// this portion is login, now we do hardcoded,
         // after i got this information i need to convert to entity
-        User user = userMapper.convertToEntity(currentUserDTO);
+        User user = mapperUtil.convert(currentUserDTO, new User());
         List<Project> list = projectRepository.findAllByAssignedManager(user);
         return list.stream().map(project -> {
-            ProjectDTO obj = projectMapper.convertToDTO(project);
+            ProjectDTO obj = mapperUtil.convert(project, new ProjectDTO());
             obj.setUnfinishedTaskCounts(taskService.totalNonCompletedTask(project.getProjectCode()));
             obj.setCompleteTaskCounts(taskService.totalCompletedTask(project.getProjectCode()));
             return obj;
@@ -116,7 +116,8 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<Project> projects = projectRepository
                 .findAllByProjectStatusIsNotAndAssignedManager(Status.COMPLETE, userMapper.convertToEntity(assignedManager));
-        return projects.stream().map(projectMapper::convertToDTO).collect(Collectors.toList());
+        return projects.stream().map(project -> mapperUtil.convert(project, new ProjectDTO())).collect(Collectors.toList());
+
     }
 
 }
