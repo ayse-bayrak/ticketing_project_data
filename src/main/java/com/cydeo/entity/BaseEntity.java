@@ -11,16 +11,26 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @MappedSuperclass
 public class BaseEntity {
-
+//we want to it to be super class and also we want it to be mapped
+// .. so we name it like MappedSuperclass
+    /*
+    we don't want it Table. That's why we don't use the Entity.
+    But in order for this mapping, just like you must had to happen.
+    We need to include this @MappedSuperclass
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // postgres create this Id
     private Long id;
-    @Column(nullable = false, updatable = false) // when we try tu update something ignore these fields, ignore what it means just keep the data for the creation time, don't touch it when it's updating
+
+    @Column(nullable = false, updatable = false) // when we try to update something ignore these fields, ignore what it means just keep the data for the creation time, don't touch it when it's updating
     private LocalDateTime insertDateTime;// we need in the database, need to keep track on some information, but I don't need to UI
+
     @Column(nullable = false, updatable = false)
     private Long insertUserId;
+
     @Column(nullable = false)
     private LocalDateTime lastUpdateDateTime;
+
     @Column(nullable = false)
     private Long lastUpdateUserId;
 
@@ -43,7 +53,7 @@ public class BaseEntity {
 
 }
 /*
-I am creating two different object fro same object, DTO and entity.
+I am creating two different object for same object, DTO and entity.
 Why?
 Because some information may be not necessary for UI part.
  */

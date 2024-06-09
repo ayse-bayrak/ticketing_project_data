@@ -14,11 +14,12 @@ import java.time.LocalDate;
 @NoArgsConstructor // we need because of jpql stuff
 @Entity
 @Table(name="projects")
-@Where(clause = "is_deleted=false") // in the interview toy can explain this one, most of the junior developer not aware of this one.
+@Where(clause = "is_deleted=false") // in the interview you can explain this one, most of the junior developer not aware of this one.
 public class Project extends BaseEntity{
 
     @Column(unique = true) // database is not gonna let we create with same projectCode if it is existing another project
     private String projectCode;
+
     private String projectName;
 
     @Column(columnDefinition = "DATE")

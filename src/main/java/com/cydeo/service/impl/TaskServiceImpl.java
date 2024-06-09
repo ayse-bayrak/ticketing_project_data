@@ -54,6 +54,7 @@ private final UserMapper userMapper;
     @Override
     public void update(TaskDTO dto) {
       Optional<Task> task = taskRepository.findById(dto.getId());
+        //ready Jpa methods returns everything in Optional
       Task convertedTask = taskMapper.convertToEntity(dto);
       if (task.isPresent()){
           convertedTask.setTaskStatus(dto.getTaskStatus()!=null ? dto.getTaskStatus(): task.get().getTaskStatus() ); // in part-5 it is changed and fixed
@@ -67,7 +68,7 @@ private final UserMapper userMapper;
     @Override
     public void delete(Long id) {
         Optional<Task> foundTask = taskRepository.findById(id);
-
+    //ready Jpa methods returns everything in Optional
         if (foundTask.isPresent()){
             foundTask.get().setIsDeleted(true);
             taskRepository.save(foundTask.get());
@@ -78,6 +79,7 @@ private final UserMapper userMapper;
     @Override
     public TaskDTO findById(Long id) {
         Optional<Task> task = taskRepository.findById(id);
+        //ready Jpa methods returns everything in Optional
 
         if (task.isPresent()) {
             return taskMapper.convertToDTO(task.get());
@@ -125,6 +127,8 @@ private final UserMapper userMapper;
         UserDTO loggedInUser = userService.findByUserName("john@employee.com");
         List<Task> tasks = taskRepository.findAllByTaskStatusAndAssignedEmployee(status, userMapper.convertToEntity(loggedInUser));
         return tasks.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
+// if you have @Where(clause = "is_deleted=false") on top of the user entity. It's not going to be applied only to this queries you have inside user repository.
+//It is going to be applied to all the queries using User. That means, for example, in the project repository or task repository.
     }
 
     @Override

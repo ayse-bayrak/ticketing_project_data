@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     void deleteByUserName(String username); // derived query
+//@Transactional --> we use it for sensitive database operations.
 
     //Commit meaning all the steps  are successful executed
     //rollback meaning if anything error happened in any step, everything is going back, rolling back to the original place

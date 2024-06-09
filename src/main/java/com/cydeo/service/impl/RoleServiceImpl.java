@@ -43,7 +43,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     //it is looking for RoleDTO but it is returning Role, so we need to convert it
-    //we use modelmapper dependency to convert, if we din't  use third part library which is modelmapper
+    //we use modelMapper dependency to convert, if we din't  use third part library which is modelMapper
     //we need to one by one get it and set it, all the field we need to do. this is too much work.
     //so we are using a third party library
 

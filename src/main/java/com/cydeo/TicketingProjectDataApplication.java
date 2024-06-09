@@ -15,9 +15,9 @@ public class TicketingProjectDataApplication {
     }
 
     //I am trying to add bean in the container through @Bean annotation
-    //Becasue it is not our class so we don't put @Component anywhere
+    //Because it is not our class so we don't put @Component anywhere
     //create a class annotated with @Configuration
-    //Write a method which return the object that you trying to add in the container
+    //Write a method which return the object that you are trying to add in the container
     //Annotate this method with @Bean
 
     @Bean

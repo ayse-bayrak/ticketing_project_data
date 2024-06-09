@@ -22,8 +22,12 @@ import java.util.stream.Collectors;
 // if doing this kind of transaction in the database, we need to @Transactional, either method level either class level
 // if derived @Transactional
 // if jpql or native @Transactional and @Modifying
+//@Transactional --> we use it for sensitive database operations.
+//Commit meaning all the steps  are successful executed
+//rollback meaning if anything error happened in any step, everything is going back, rolling back to the original place
+
 @Service
-@Transactional // when we put it to the class level, use only method with derived Query  use @Query (JPQL and native query), based on the needs either class level or method
+@Transactional // when we put it to the class level, use only method with derived Query,  use @Query (JPQL and native query), based on the needs either class level or method
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
@@ -134,7 +138,7 @@ private boolean checkIfCanBeDeleted(User user) {
 switch (user.getRole().getDescription()) {
     case "Manager":
         List<ProjectDTO> projectDTOList = projectService.listAllNonCompletedByAssignedManager(userMapper.convertToDTO(user));
-        return projectDTOList.size() == 0; // if i need to cretae function related with other object -need to other repository- i can not use directly other repository, i should use related service,
+        return projectDTOList.size() == 0; // if i need to create function related with other object -need to other repository- i can not use directly other repository, i should use related service,
 // we can use other service not it's repository, Don't directly  use a other Service's repo without calling them first  it is rude (edited)
     /*if you need some functionality related with other objects, maybe like coming from other services.
     you will be keeping it on the same layer. You will again communicate with a different service.

@@ -37,7 +37,7 @@ public class Task extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
-    private Project project; // one project can have many takes
+    private Project project; // one project can have many tasks
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="assigned_employee_id")
